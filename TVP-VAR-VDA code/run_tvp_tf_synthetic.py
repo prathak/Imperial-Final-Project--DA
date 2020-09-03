@@ -1,3 +1,5 @@
+import argparse
+
 import numpy as np
 from gen_data import run_DGP
 import tvp_var_vda
@@ -26,4 +28,23 @@ def get_params(n_dim, time_dim):
     return K, Q_0, beta, beta_b, qK, tt, I_torch
 
 
-run_tvp_var(2, 200, 1)
+def get_arguments():
+    parser = argparse.ArgumentParser(description='LSTNet Model')
+
+    parser.add_argument('--dim', type=int, required=True, help='Series dimension')
+    parser.add_argument('--time', type=int, required=True, help='Time dimension')
+    parser.add_argument('--window', type=int, default=1, help='Horizon window, default = 1')
+
+    args = parser.parse_args()
+
+    return args
+
+if __name__ == '__main__':
+    try:
+        args = get_arguments()
+        # print(args)
+    except SystemExit as err:
+        print("Error reading arguments")
+        exit(0)
+
+    run_tvp_var(args.dim, args.time, args.window)

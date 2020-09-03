@@ -51,7 +51,6 @@ class TVP_variational_optimization:
             residual_sigma = tf.einsum("abc,cd->abd", residual_t, self.sigma_inv)
             total_residual_cost = tf.einsum("abc,acd->abd", residual_sigma, residual)
             J_0 = tf.reduce_sum(total_residual_cost, 0)
-        #         return J_b + J_0
         return tf.reshape(J_b + J_0, ())
 
     def loss_and_gradient(self, x):

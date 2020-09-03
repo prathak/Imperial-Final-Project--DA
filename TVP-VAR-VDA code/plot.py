@@ -23,7 +23,7 @@ def plot(time_dim, n_dim, beta, Beta, y_hat, Y):
     ax[1].plot(Y)
     plt.pause(0.005)
     plt.tight_layout()
-    plt.savefig('temp_synthetic.png')
+    plt.savefig('temp_synthetic2.png')
     plt.show()
 
 def plot_beta_dataframe_with_datetime(beta_dataframe, pos, filename, save=False):
