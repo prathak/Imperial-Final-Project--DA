@@ -1,3 +1,5 @@
+import argparse
+
 import numpy as np
 from sklearn.preprocessing import MinMaxScaler
 import tensorflow as tf
@@ -56,7 +58,7 @@ def get_beta(file, scaling_factor=1, numpy_type=False):
     return b_var * scaling_factor
 
 
-def run_model(file, scale, pos):
+def run_model(file, scale, pos, save_file):
     # b_var,scaler = get_scaled_b_var(b_var)
     b_var = get_beta(file, scale)
     X_train, Y_train, X_test, Y_test = get_train_and_test_data(b_var, time_steps=20)
@@ -70,12 +72,12 @@ def run_model(file, scale, pos):
                   optimizer=tf.keras.optimizers.Adam(learning_rate=0.001),
                   metrics=[tf.keras.metrics.MeanAbsoluteError(), tf.keras.metrics.MeanSquaredError()])
     history = model.fit(X_train, Y_train, epochs=7, batch_size=30, verbose=1)
-    plot_predictions(model, X_train, X_test, file, pos,scale)
+    plot_predictions(model, X_train, X_test, file, pos, scale, save_file)
 
     model.save('test.h5')
 
 
-def plot_predictions(model, X_train, X_test, file, pos,scale):
+def plot_predictions(model, X_train, X_test, file, pos, scale, save_file):
     y_pred = get_predictions(model, X_train)
     y_test_pred = get_predictions(model, X_test)
 
@@ -85,7 +87,7 @@ def plot_predictions(model, X_train, X_test, file, pos,scale):
 
     beta_pred = pd.DataFrame(y_pred)
     beta_pred_test = pd.DataFrame(y_test_pred)
-    plot_beta_pred.plot_beta_with_datetime(beta_df, beta_pred, beta_pred_test, tot - test_pct, tot, pos, 'test.png',
+    plot_beta_pred.plot_beta_with_datetime(beta_df, beta_pred, beta_pred_test, tot - test_pct, tot, pos, save_file,
                                            save=True)
 
 
@@ -105,5 +107,27 @@ def get_error(y_pred, y_test_pred, Y_train, Y_test):
           median_absolute_error(Y_test, y_test_pred))
 
 
-run_model('../TVP-VAR-VDA code/beta/BNB_amount_to_beta.csv', 10, 7)
+# run_model('../TVP-VAR-VDA code/beta/BNB_amount_to_beta.csv', 10, 7)
 # run_model('../TVP-VAR-VDA code/beta/BNB_amount_to_y_price_x_diff_beta.csv', 1, 14)
+
+def get_arguments():
+    parser = argparse.ArgumentParser(description='LSTNet Model')
+
+    parser.add_argument('--beta_file', type=str, required=True, help='Beta file location')
+    parser.add_argument('--scaling_factor', type=int, default=1, help='Beta scaling factor')
+    parser.add_argument('--beta_plot_pos', type=int, required=True, help='Beta plot position')
+    parser.add_argument('--save', type=str, required=True, help='Plot save location and file name')
+
+    args = parser.parse_args()
+
+    return args
+
+
+if __name__ == '__main__':
+    try:
+        args = get_arguments()
+    except SystemExit as err:
+        print("Error reading arguments")
+        exit(0)
+
+    run_model(args.beta_file, args.scaling_factor, args.beta_plot_pos, args.save)
