@@ -68,17 +68,17 @@ class PostAutoRegressionTransformation(tf.keras.layers.Layer):
 
 def get_TVP_VARNet_model(input_shape, output_dim):
     X = tf.keras.Input(shape=input_shape[1:])
-    out4, _, _ = tf.keras.layers.LSTM(100, return_state=True, return_sequences=False, activation='relu',
-                                      kernel_initializer=tf.keras.initializers.GlorotUniform(seed=0))(X)
-    out41 = tf.keras.layers.Flatten()(out4)
-    out5 = tf.keras.layers.Dense(output_dim)(out41)
+    out, _, _ = tf.keras.layers.LSTM(100, return_state=True, return_sequences=False, activation='relu',
+                                     kernel_initializer=tf.keras.initializers.GlorotUniform(seed=0))(X)
+    out1 = tf.keras.layers.Flatten()(out)
+    out2 = tf.keras.layers.Dense(output_dim)(out1)
 
     new_input = X
     Z = PreAutoRegressionTransformation(10)(new_input)
     Z = Flatten()(Z)
     Z = Dense(1)(Z)
     Z = PostAutoRegressionTransformation(output_dim)([Z, new_input])
-    print("Z shape: ", Z.shape)
-    Y = Add()([out5, Z])
+
+    Y = Add()([out2, Z])
     model = tf.keras.Model(inputs=X, outputs=Y)
     return model
