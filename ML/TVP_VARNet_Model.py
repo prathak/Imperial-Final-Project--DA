@@ -9,11 +9,12 @@ def get_model(input_shape, output_dim):
     model.add(tf.keras.Input(shape=(input_shape[1],)))
     model.add(Dense(50))
     model.add(tf.keras.layers.Dropout(0.2))
-    model.add(Dense(6))
+    model.add(Dense(output_dim))
     return model
 
 
-# This class has been inspired from the paper https://arxiv.org/pdf/1703.07015.pdf
+# This class has been inspired and adapted from the paper https://arxiv.org/pdf/1703.07015.pdf
+# GitHub : https://github.com/fbadine/LSTNet
 class PreAutoRegressionTransformation(tf.keras.layers.Layer):
     def __init__(self, lag_ar, **kwargs):
         # Number of timeseries values to consider for the linear layer (AR layer)
@@ -42,7 +43,8 @@ class PreAutoRegressionTransformation(tf.keras.layers.Layer):
         return config
 
 
-# This class has been inspired from the paper https://arxiv.org/pdf/1703.07015.pdf
+# This class has been inspired and adapted from the paper https://arxiv.org/pdf/1703.07015.pdf
+# GitHub : https://github.com/fbadine/LSTNet
 class PostAutoRegressionTransformation(tf.keras.layers.Layer):
     def __init__(self, n_dim, **kwargs):
         # Number of timeseries
