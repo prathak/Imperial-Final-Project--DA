@@ -14,8 +14,10 @@ source /vol/bitbucket/pmk119_2/miniconda3/bin/activate
 # To Run TVP-VAR-VDA : 
 TVP-VAR-VDA for synthetic data can be run using run_tvp_tf_synthetic.py and for blockchain data using run_tvp_tf_data.py
 For calling TVP-VAR-VDA for blockchain data, the signature of the function is : 
+
+Index x and y represent the index/column no of the exchange in the data for on-chain and off-chain
 ```
-run_tvp_var(off_chain_file_name=file_name_off_chain, on_chain_file_name=file_name_on_chain, saveplot)
+run_tvp_var(off_chain_file_name=file_name_off_chain, on_chain_file_name=file_name_on_chain, saveplot, index_x, index_y)
 ```
 Example of files : 
 ```
@@ -24,8 +26,7 @@ file_name_on_chain = './blockchain_data/BNB_amount_to_data_volume_diff.csv'
 ```
 OR using command line arguments : 
 ```
-python  run_tvp_tf_data.py --on_chain_file './blockchain_data/BNB_amount_to_data_volume_diff.csv' --off_chain_file './blockchain_data/BNB_price_diff_volume_diff.csv' --save 'temp_plot.png'
-```
+python  run_tvp_tf_data.py --on_chain_file './blockchain_data/BNB_amount_to_data_volume_diff.csv' --off_chain_file './blockchain_data/BNB_ammount_to_price_diff_volume_diff.csv' --save 'temp_arg.png' --index_x 2 --index_y 2```
 For synthetic data : 
 ```
 python run_tvp_tf_synthetic.py --dim 2 --time 100 --window 1 --save 'tvp_var.png'
