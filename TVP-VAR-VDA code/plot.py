@@ -4,6 +4,7 @@ import matplotlib.dates as mdates
 from matplotlib.dates import DateFormatter
 import seaborn as sns
 
+
 def get_transformed_beta(time, n_dim, beta):
     transformed = np.zeros((time, n_dim), dtype=np.float)
     for t in range(0, time):
@@ -12,7 +13,8 @@ def get_transformed_beta(time, n_dim, beta):
         transformed[t] = np.diag(b2)
     return transformed
 
-def plot(time_dim, n_dim, beta, Beta, y_hat, Y):
+
+def plot(time_dim, n_dim, beta, Beta, y_hat, Y, filename):
     transformed_beta = get_transformed_beta(time_dim, n_dim, beta)
     fig2, ax = plt.subplots(1, 2, figsize=(17, 5))
     ax[0].set_title(r'Beta')
@@ -26,8 +28,9 @@ def plot(time_dim, n_dim, beta, Beta, y_hat, Y):
     plt.pause(0.005)
     plt.tight_layout()
 
-    plt.savefig('temp_synthetic2.png')
+    plt.savefig(filename)
     plt.show()
+
 
 def plot_beta_dataframe_with_datetime(beta_dataframe, pos, filename, save=False):
     y = mdates.datestr2num(beta_dataframe.index.values)

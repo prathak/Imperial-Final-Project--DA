@@ -15,7 +15,7 @@ source /vol/bitbucket/pmk119_2/miniconda3/bin/activate
 TVP-VAR-VDA for synthetic data can be run using run_tvp_tf_synthetic.py and for blockchain data using run_tvp_tf_data.py
 For calling TVP-VAR-VDA for blockchain data, the signature of the function is : 
 ```
-run_tvp_var(off_chain_file_name=file_name_off_chain, on_chain_file_name=file_name_on_chain)
+run_tvp_var(off_chain_file_name=file_name_off_chain, on_chain_file_name=file_name_on_chain, saveplot)
 ```
 Example of files : 
 ```
@@ -28,7 +28,13 @@ python  run_tvp_tf_data.py --on_chain_file './blockchain_data/BNB_amount_to_data
 ```
 For synthetic data : 
 ```
-python run_tvp_tf_synthetic.py --dim 2 --time 100 --window 1
+python run_tvp_tf_synthetic.py --dim 2 --time 100 --window 1 --save 'tvp_var.png'
+```
+
+To run Kalman filter : 
+```
+python kalman_var.py --dim 3 --time 200 --save 'kalman.png'
+
 ```
 # To Run TVP-VARNet ML model : 
 TVP-VARNet ML model can be run using run_tvp_varnet.py. It needs a file consisting of beta values as input, scaling factor and position of exchange coefficient. 

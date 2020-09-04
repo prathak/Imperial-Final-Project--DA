@@ -6,14 +6,14 @@ import tvp_var_vda
 import plot as plot_beta
 
 
-def run_tvp_var(n_dim, time_dim, window):
+def run_tvp_var(n_dim, time_dim, window, save_filename):
     K, Q_0, beta, beta_b, qK, tt, I_torch = get_params(n_dim, time_dim)
 
     X, Y, Beta = run_DGP(periods=time_dim, dimensions=n_dim)
     X = np.concatenate((X, np.ones(shape=[time_dim, 1])), axis=1)
 
     beta, Y_hat = tvp_var_vda.run_tvp_var(X, Y, time_dim, n_dim, K, Q_0, beta, beta_b, qK, I_torch, window)
-    plot_beta.plot(time_dim, n_dim, beta, Beta, Y_hat, Y)
+    plot_beta.plot(time_dim, n_dim, beta, Beta, Y_hat, Y, save_filename)
 
 
 def get_params(n_dim, time_dim):
@@ -34,6 +34,7 @@ def get_arguments():
     parser.add_argument('--dim', type=int, required=True, help='Series dimension')
     parser.add_argument('--time', type=int, required=True, help='Time dimension')
     parser.add_argument('--window', type=int, default=1, help='Horizon window, default = 1')
+    parser.add_argument('--save', type=str, required=True, help='Plot save location and file name')
 
     args = parser.parse_args()
 
@@ -47,4 +48,4 @@ if __name__ == '__main__':
         print("Error reading arguments")
         exit(0)
 
-    run_tvp_var(args.dim, args.time, args.window)
+    run_tvp_var(args.dim, args.time, args.window, args.save)

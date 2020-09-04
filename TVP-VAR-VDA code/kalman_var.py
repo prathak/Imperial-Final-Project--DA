@@ -1,7 +1,9 @@
+import argparse
+
 import numpy as np
 import time as timee
 import tensorflow as tf
-
+import plot as plot_beta
 
 
 def run_DGP(periods, dimensions, lag=False):
@@ -80,11 +82,9 @@ def tvp_da(sigma_bar, Q_0, beta_0, X, Y, time, K, n_dim, lag_length):
     beta[lag_length] = beta_0
     Q_prev = Q_0
     Y_hat = tf.unstack(tf.zeros(shape=[time, n_dim]))
-    avg = 0
     I_2 = tf.eye(qK, dtype=tf.float64)
     I = tf.eye((K * n_dim), dtype=tf.float64)
     for t in range(lag_length + 1, time):
-        start1 = timee.time()
         x = tf.convert_to_tensor(np.kron(np.identity(n_dim), X[t]), dtype=tf.float64)
         xT = tf.transpose(x)
         x_Q_xT = tf.matmul(tf.matmul(x, Q_prev), xT)
@@ -97,9 +97,6 @@ def tvp_da(sigma_bar, Q_0, beta_0, X, Y, time, K, n_dim, lag_length):
         beta[t] = beta[t - 1] + tf.matmul(kalman_gain, tf.subtract(Y_new, y_hat))
         Q = (I_2 - tf.matmul(tf.matmul(kalman_gain, x), Q_prev))
         Q_prev = Q + I
-        start2 = timee.time()
-        avg += start2 - start1
-    print("Avg time : ", avg / time)
     return tf.stack(beta), tf.stack(Y_hat)
 
 
@@ -107,22 +104,36 @@ def mse_error(y_hat, y):
     return ((y.T - y_hat.T) ** 2).mean(axis=1).mean()
 
 
-def run(time_dim, n_dim):
+def run(time_dim, n_dim, save_filename):
     lag = False
     for lag_length in [0]:
         K = n_dim + 1 if lag_length == 0 else (lag_length + 1) * n_dim + 1
-        print("Lag : " + str(lag_length))
-        X, Y, _ = run_DGP(periods=time_dim, dimensions=n_dim, lag=lag)
+        X, Y, Beta = run_DGP(periods=time_dim, dimensions=n_dim, lag=lag)
         sigma_bar, Q_0, beta_0 = get_priors(n_dim, K)
-        print("Done with data")
-        start = timee.time()
         x = get_x(time_dim, X)
-        print("In tvp da algo")
         beta, y_hat = tvp_da(sigma_bar, Q_0, beta_0, x, Y, time_dim, K, n_dim, lag_length)
-        end = timee.time()
-        print('runtime :' + str(lag_length) + ' :', end - start)
-        print('time :' + str(time_dim) + ' and n_dim :' + str(n_dim))
         lag = True
-        print("Mse error :" + str(mse_error(y_hat.numpy(), Y)))
+    plot_beta.plot(time_dim, n_dim, beta, Beta, y_hat, Y, save_filename)
 
+
+def get_arguments():
+    parser = argparse.ArgumentParser(description='LSTNet Model')
+
+    parser.add_argument('--dim', type=int, required=True, help='Series dimension')
+    parser.add_argument('--time', type=int, required=True, help='Time dimension')
+    parser.add_argument('--save', type=str, required=True, help='Plot save location and file name')
+
+    args = parser.parse_args()
+
+    return args
+
+if __name__ == '__main__':
+    try:
+        args = get_arguments()
+        # print(args)
+    except SystemExit as err:
+        print("Error reading arguments")
+        exit(0)
+
+    run(args.time, args.dim, args.save)
 
