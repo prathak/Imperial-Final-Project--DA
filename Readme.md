@@ -43,5 +43,5 @@ Via command line arguments :
 python run_tvp_varnet.py --beta_file '../TVP-VAR-VDA code/beta/BNB_amount_to_beta.csv' --scaling_factor 10 --beta_plot_pos 7 --save 'test2.png'
 ```
 # Data
-blockchain data exists in folder called blockchain_data and beta files exist in folder called beta. Blockchain data has been generated using python notebooks :
+Blockchain data exists in folder called blockchain_data and beta files exist in folder called beta. Blockchain data has been generated using python notebooks :
 BNB Generate On-chain and Off-chain data.ipynb, Data On-Chain ERC20 data.ipynb
