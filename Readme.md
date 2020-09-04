@@ -19,12 +19,12 @@ run_tvp_var(off_chain_file_name=file_name_off_chain, on_chain_file_name=file_nam
 ```
 Example of files : 
 ```
-file_name_off_chain = "./blockchain_data/BNB_ammount_to_price_diff_volume_diff.csv"
+file_name_off_chain = "./blockchain_data/BNB_price_diff_volume_diff.csv"
 file_name_on_chain = './blockchain_data/BNB_amount_to_data_volume_diff.csv'
 ```
 OR using command line arguments : 
 ```
-python  run_tvp_tf_data.py --on_chain_file './blockchain_data/BNB_amount_to_data_volume_diff.csv' --off_chain_file './blockchain_data/BNB_ammount_to_price_diff_volume_diff.csv' --save 'temp_plot.png'
+python  run_tvp_tf_data.py --on_chain_file './blockchain_data/BNB_amount_to_data_volume_diff.csv' --off_chain_file './blockchain_data/BNB_price_diff_volume_diff.csv' --save 'temp_plot.png'
 ```
 For synthetic data : 
 ```
