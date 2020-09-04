@@ -18,13 +18,14 @@ def plot(time_dim, n_dim, beta, Beta, y_hat, Y, filename):
     transformed_beta = get_transformed_beta(time_dim, n_dim, beta)
     fig2, ax = plt.subplots(1, 2, figsize=(17, 5))
     ax[0].set_title(r'Beta')
-    ax[0].plot(transformed_beta[:, :], linestyle='--', label="Predicted")
     ax[0].plot(Beta[:, :], label="True")
-    ax[0].legend()
+    ax[0].plot(transformed_beta[:, :], linestyle='--', label="Predicted")
+
     ax[1].set_title(r'Real and Forecasted values $Y$')
-    ax[1].plot(y_hat, linestyle='--', label="Predicted")
     ax[1].plot(Y, label="True")
-    ax[1].legend()
+    ax[1].plot(y_hat, linestyle='--', label="Predicted")
+
+    plt.legend()
     plt.pause(0.005)
     plt.tight_layout()
 
