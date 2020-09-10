@@ -117,10 +117,24 @@ def get_arguments():
     parser.add_argument('--scaling_factor', type=int, default=1, help='Beta scaling factor')
     parser.add_argument('--beta_plot_pos', type=int, required=True, help='Beta plot position')
     parser.add_argument('--save', type=str, required=True, help='Plot save location and file name')
+    parser.add_argument('--load', type=bool, default=False, help='Load model from h5 file')
 
     args = parser.parse_args()
 
     return args
+
+def run_model_with_h5(file, scale, pos, save_file):
+    # b_var,scaler = get_scaled_b_var(b_var)
+    b_var = get_beta(file, scale)
+    X_train, Y_train, X_test, Y_test = get_train_and_test_data(b_var, time_steps=20)
+
+    input_shape = X_train.shape
+    output_shape = Y_train[0].shape[0]
+    print(input_shape, output_shape)
+    model = TVP_VARNet_Model.get_TVP_VARNet_model(input_shape, output_shape)
+    model.load_weights('test.h5')
+    plot_predictions(model, X_train, X_test, file, pos, scale, save_file)
+
 
 
 if __name__ == '__main__':
@@ -129,5 +143,7 @@ if __name__ == '__main__':
     except SystemExit as err:
         print("Error reading arguments")
         exit(0)
-
-    run_model(args.beta_file, args.scaling_factor, args.beta_plot_pos, args.save)
+    if args.load:
+        run_model_with_h5(args.beta_file, args.scaling_factor, args.beta_plot_pos, args.save)
+    else:
+        run_model(args.beta_file, args.scaling_factor, args.beta_plot_pos, args.save)
